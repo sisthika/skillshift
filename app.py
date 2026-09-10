@@ -1,4 +1,4 @@
-﻿"""
+"""
 SkillShift - General Workforce Auto-Reassignment System
 Backend REST API powered by Flask and CORS.
 
@@ -17,8 +17,10 @@ Features:
 
 import os
 from datetime import datetime
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -320,7 +322,13 @@ def find_employee_by_identifier(identifier):
 
 @app.route("/", methods=["GET"])
 def index():
-    """Root endpoint providing API information and route directory."""
+    """Serve the frontend dashboard index.html"""
+    return send_from_directory(BASE_DIR, "index.html")
+
+
+@app.route("/api", methods=["GET"])
+def api_info():
+    """Root API endpoint providing API information and route directory."""
     return jsonify({
         "system": "SkillShift Workforce Auto-Reassignment API",
         "version": "1.0.0",
@@ -329,9 +337,21 @@ def index():
             "health": "GET /api/health",
             "employees": "GET /api/employees, POST /api/employees",
             "tasks": "GET /api/tasks",
-            "recommendations": "POST /api/recommendations"
+            "recommendations": "POST /api/recommendations",
+            "confirm_reassign": "POST /api/reassign/confirm"
         }
     })
+
+
+@app.route("/<path:path>", methods=["GET"])
+def serve_static(path):
+    """Serve static frontend files (style.css, script.js, etc.)."""
+    if path.startswith("api"):
+        return jsonify({"error": "Endpoint not found"}), 404
+    file_path = os.path.join(BASE_DIR, path)
+    if os.path.exists(file_path) and not os.path.isdir(file_path):
+        return send_from_directory(BASE_DIR, path)
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/api/health", methods=["GET"])
