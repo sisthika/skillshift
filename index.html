@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShift - Task Reassignment</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">S</div>
+            <div>
+                <h2>SkillShift</h2>
+                <span>Workforce Intelligence</span>
+            </div>
+        </div>
+
+        <nav>
+            <button class="nav-item active" onclick="showSection('dashboard', this)">
+                <span>◉</span> Dashboard
+            </button>
+
+            <button class="nav-item" onclick="showSection('reassign', this)">
+                <span>⇄</span> Reassign Task
+            </button>
+
+            <button class="nav-item" onclick="showSection('employees', this)">
+                <span>♙</span> Employees
+            </button>
+
+            <button class="nav-item" onclick="showSection('history', this)">
+                <span>◷</span> History
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+            <small>SkillShift v1.0</small>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h1 id="pageTitle">Workforce Dashboard</h1>
+                <p id="pageSubtitle">
+                    Intelligent task reassignment powered by performance history.
+                </p>
+            </div>
+
+            <div class="top-actions">
+                <div class="notification">🔔</div>
+
+                <div class="profile">
+                    <div class="avatar">AD</div>
+                    <div>
+                        <strong>Admin</strong>
+                        <span>Workforce Manager</span>
+                    </div>
+                    <span>⌄</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="section active-section">
+
+            <div class="hero-card">
+
+                <div>
+                    <span class="eyebrow">REAL-TIME WORKFORCE INTELLIGENCE</span>
+
+                    <h2>
+                        Handle absences<br>
+                        <strong>without losing productivity.</strong>
+                    </h2>
+
+                    <p>
+                        SkillShift automatically identifies the best available
+                        employee using historical performance, workload and
+                        task compatibility.
+                    </p>
+
+                    <button class="primary-btn" onclick="openReassign()">
+                        ⚡ Handle an Absence
+                    </button>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+
+                    <div class="center-node">
+                        <span>AI</span>
+                    </div>
+
+                    <div class="node node-one">👤</div>
+                    <div class="node node-two">✓</div>
+                    <div class="node node-three">↗</div>
+                    <div class="node node-four">⚙</div>
+                </div>
+
+            </div>
+
+
+            <!-- STAT CARDS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon red">!</div>
+                    <div>
+                        <span>Today's Absences</span>
+                        <strong id="absenceCount">3</strong>
+                        <small class="negative">↑ 1 from yesterday</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div>
+                        <span>Tasks Reassigned</span>
+                        <strong id="reassignedCount">12</strong>
+                        <small class="positive">94% success rate</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">★</div>
+                    <div>
+                        <span>Avg. Match Score</span>
+                        <strong>91%</strong>
+                        <small class="positive">↑ 4.2% this month</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">◷</div>
+                    <div>
+                        <span>Avg. Resolution</span>
+                        <strong>2.4m</strong>
+                        <small class="positive">↓ 38% faster</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- LIVE OVERVIEW -->
+
+            <div class="dashboard-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Today's Workforce</h3>
+                            <p>Live employee availability</p>
+                        </div>
+
+                        <span class="live-badge">
+                            <span></span> LIVE
+                        </span>
+                    </div>
+
+                    <div id="workforceList" class="employee-list"></div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Recent Reassignments</h3>
+                            <p>Latest system decisions</p>
+                        </div>
+
+                        <button class="text-btn" onclick="showSection('history')">
+                            View all →
+                        </button>
+                    </div>
+
+                    <div id="recentList"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= REASSIGN ================= -->
+
+        <section id="reassign" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">ABSENCE MANAGEMENT</span>
+                    <h2>Reassign an Absent Employee's Task</h2>
+                    <p>
+                        Select the absent employee and let SkillShift calculate
+                        the best replacement.
+                    </p>
+                </div>
+
+                <div class="ai-badge">
+                    ✦ AI MATCHING ACTIVE
+                </div>
+            </div>
+
+
+            <div class="reassign-layout">
+
+                <!-- LEFT -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Absence Details</h3>
+                            <p>Tell us which task needs coverage.</p>
+                        </div>
+                    </div>
+
+                    <label>Absent Employee</label>
+
+                    <select id="employeeSelect" onchange="loadAbsentEmployee()">
+                        <option value="">Select employee...</option>
+                    </select>
+
+
+                    <div id="taskDetails" class="task-details hidden">
+
+                        <div class="detail-row">
+                            <span>Employee</span>
+                            <strong id="employeeName"></strong>
+                        </div>
+
+                        <div class="detail-row">
+                            <span>Role</span>
+                            <strong id="employeeRole"></strong>
+                        </div>
+
+                        <div class="detail-row">
+                            <span>Task</span>
+                            <strong id="taskName"></strong>
+                        </div>
+
+                        <div class="detail-row">
+                            <span>Priority</span>
+                            <span id="taskPriority" class="priority"></span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span>Estimated workload</span>
+                            <strong id="taskHours"></strong>
+                        </div>
+
+                    </div>
+
+
+                    <button id="findBtn" class="primary-btn full-btn" onclick="findBestCandidate()" disabled>
+                        Find Best Replacement →
+                    </button>
+
+                </div>
+
+
+                <!-- RIGHT -->
+
+                <div class="panel recommendation-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Recommended Replacement</h3>
+                            <p>Calculated from capability + workload + risk.</p>
+                        </div>
+                    </div>
+
+                    <div id="emptyRecommendation" class="empty-state">
+                        <div class="empty-icon">✦</div>
+                        <h3>No recommendation yet</h3>
+                        <p>
+                            Select an absent employee and click
+                            "Find Best Replacement".
+                        </p>
+                    </div>
+
+
+                    <div id="recommendation" class="hidden">
+
+                        <div class="recommended-person">
+
+                            <div id="candidateAvatar" class="big-avatar">
+                                AK
+                            </div>
+
+                            <div>
+                                <span class="recommend-label">
+                                    BEST MATCH
+                                </span>
+
+                                <h2 id="candidateName">
+                                    Arjun Kumar
+                                </h2>
+
+                                <p id="candidateRole">
+                                    Senior Operations Associate
+                                </p>
+                            </div>
+
+                            <div class="match-score">
+                                <strong id="matchScore">94%</strong>
+                                <span>Match</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="score-bars">
+
+                            <div class="score-row">
+                                <div>
+                                    <span>Task Capability</span>
+                                    <strong id="skillScore">95%</strong>
+                                </div>
+
+                                <div class="progress">
+                                    <div id="skillBar"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="score-row">
+                                <div>
+                                    <span>Workload Capacity</span>
+                                    <strong id="capacityScore">91%</strong>
+                                </div>
+
+                                <div class="progress">
+                                    <div id="capacityBar"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="score-row">
+                                <div>
+                                    <span>Historical Performance</span>
+                                    <strong id="historyScore">96%</strong>
+                                </div>
+
+                                <div class="progress">
+                                    <div id="historyBar"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="score-row">
+                                <div>
+                                    <span>Continuity / Risk</span>
+                                    <strong id="riskScore">88%</strong>
+                                </div>
+
+                                <div class="progress">
+                                    <div id="riskBar"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="decision-box">
+
+                            <div class="decision-icon">✓</div>
+
+                            <div>
+                                <strong>Safe reassignment</strong>
+
+                                <p id="decisionText">
+                                    Arjun has enough remaining capacity to
+                                    take this task without putting his current
+                                    assignment at risk.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <button class="primary-btn full-btn" onclick="confirmReassignment()">
+                            ✓ Confirm Reassignment
+                        </button>
+
+                        <button class="secondary-btn full-btn" onclick="findAlternative()">
+                            Compare Alternatives
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CANDIDATE TABLE -->
+
+            <div id="candidatePanel" class="panel hidden candidate-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Candidate Analysis</h3>
+                        <p>
+                            Every available employee ranked by suitability.
+                        </p>
+                    </div>
+
+                    <span class="ranking-info">
+                        Higher score = better fit
+                    </span>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Capability</th>
+                                <th>Capacity</th>
+                                <th>Performance</th>
+                                <th>Risk</th>
+                                <th>Overall</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="candidateTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= EMPLOYEES ================= -->
+
+
+        <!-- ================= EMPLOYEES ================= -->
+
+        <section id="employees" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">WORKFORCE</span>
+                    <h2>Employee Intelligence</h2>
+                    <p>
+                        Manage employees, skills, workload and performance.
+                    </p>
+                </div>
+
+                <button class="add-employee-btn" onclick="openAddEmployeeModal()">
+                    <span class="add-icon">+</span>
+                    Add Employee
+                </button>
+
+            </div>
+
+            <div id="employeeCards" class="employee-cards"></div>
+
+        </section>
+
+
+        <!-- ================= ADD EMPLOYEE MODAL ================= -->
+
+        <div id="addEmployeeModal" class="modal-overlay">
+
+            <div class="add-employee-modal">
+
+                <button class="modal-close" onclick="closeAddEmployeeModal()">
+                    ×
+                </button>
+
+                <div class="modal-header">
+                    <div class="modal-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <h2>Add New Employee</h2>
+                        <p>
+                            Add an employee to your workforce.
+                        </p>
+                    </div>
+                </div>
+
+                <form id="addEmployeeForm" onsubmit="addEmployee(event)">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Employee Name</label>
+                            <input type="text" id="newEmployeeName" placeholder="e.g. Aditya Kumar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Role</label>
+                            <input type="text" id="newEmployeeRole" placeholder="e.g. Operations Associate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Primary Skill</label>
+
+                            <select id="newEmployeeSkill" required>
+                                <option value="">Select skill</option>
+                                <option value="Inventory Audit">Inventory Audit</option>
+                                <option value="Quality Inspection">Quality Inspection</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Order Processing">Order Processing</option>
+                                <option value="Customer Support">Customer Support</option>
+                                <option value="Data Entry">Data Entry</option>
+                                <option value="Equipment Maintenance">Equipment Maintenance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Skill Level</label>
+
+                            <input type="number" id="newEmployeeSkillLevel" min="1" max="100" value="85" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Current Task</label>
+
+                            <input type="text" id="newEmployeeTask" placeholder="e.g. Inventory Checking"
+                                value="No active task" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Current Hours</label>
+
+                            <input type="number" id="newEmployeeHours" min="0" max="24" value="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Maximum Hours</label>
+
+                            <input type="number" id="newEmployeeMaxHours" min="1" max="24" value="8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Performance Score</label>
+
+                            <input type="number" id="newEmployeePerformance" min="1" max="100" value="85" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tasks Completed</label>
+
+                            <input type="number" id="newEmployeeCompleted" min="0" value="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+
+                            <select id="newEmployeeStatus">
+                                <option value="available">Available</option>
+                                <option value="busy">Busy</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-actions">
+
+                        <button type="button" class="secondary-btn" onclick="closeAddEmployeeModal()">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="primary-btn">
+                            ✓ Add Employee
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= HISTORY ================= -->
+
+        <section id="history" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">AUDIT TRAIL</span>
+                    <h2>Reassignment History</h2>
+                    <p>
+                        Track previous automatic task-reassignment decisions.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Absent Employee</th>
+                                <th>Task</th>
+                                <th>Replacement</th>
+                                <th>Match</th>
+                                <th>Decision</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="historyTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- TOAST -->
+
+    <div id="toast" class="toast">
+        <span>✓</span>
+        <div>
+            <strong id="toastTitle">Success</strong>
+            <p id="toastMessage">Task reassigned successfully.</p>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
